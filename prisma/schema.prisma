@@ -1,0 +1,37 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+
+model Event {
+  id          Int      @id @default(autoincrement())
+  actor_id    String
+  actor_name  String
+  group       String
+  target_id   String
+  target_name String
+  location    String
+  occurred_at DateTime @default(now())
+  action      Action?
+  metadata    Metadata?
+}
+
+model Action {
+  id          Int      @id @default(autoincrement())
+  name        String
+  event       Event    @relation(fields: [event_id], references: [id])
+  event_id    Int      @unique
+}
+
+model Metadata {
+  request_id  Int      @id @default(autoincrement())
+  redirect    String
+  description String
+  event       Event    @relation(fields: [event_id], references: [id])
+  event_id    Int      @unique
+}

@@ -8,19 +8,23 @@ Instalog lists logs for each activity made by a user and provides different filt
 
 ## Getting Started
 
-> npm run dev
+> npm start
 
 ### Dependencies
 
+
+
 ### Installing
+
+
 
 ## Authors
 
-- [Kareem Hany](https://www.linkedin.com/in/kareem-ghorab/)
+* [Kareem Hany](https://www.linkedin.com/in/kareem-ghorab/)
 
 ## Version History
 
-- 0.1: First release for Instalog
+* 0.1: First release for Instalog
 
 ## License
 
@@ -28,4 +32,4 @@ This project is licensed under the MIT License - see the LICENSE.md file for det
 
 ## Acknowledgments
 
-- [Eng. Ali Salah](https://twitter.com/alisalahio)
+* [Eng. Ali Salah](https://twitter.com/alisalahio)
