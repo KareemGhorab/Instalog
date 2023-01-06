@@ -9,15 +9,24 @@ datasource db {
 
 model Event {
   id          String    @id @default(uuid())
-  actor_id    String
-  actor_name  String
   group       String
-  target_id   String
-  target_name String
   location    String
   occurred_at DateTime  @default(now())
   action      Action?
   metadata    Metadata?
+  actor       User?     @relation("actor", fields: [actor_id], references: [id])
+  actor_id    String?
+  target      User?     @relation("target", fields: [target_id], references: [id])
+  target_id   String?
+}
+
+model User {
+  id     String  @id @default(uuid())
+  name   String
+  email  String  @unique
+  image  String
+  actor  Event[] @relation("actor")
+  target Event[] @relation("target")
 }
 
 model Action {

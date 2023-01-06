@@ -10,10 +10,15 @@ interface QueryOptions {
 	take: number
 	where?: {
 		OR: [
-			{ actor_id: { contains: string } },
-			{ actor_name: { contains: string } },
-			{ target_id: { contains: string } },
-			{ target_name: { contains: string } },
+			{
+				actor: {
+					OR: [
+						{ id: { contains: string } },
+						{ name: { contains: string } },
+						{ email: { contains: string } }
+					]
+				}
+			},
 			{
 				action: {
 					OR: [{ id: { contains: string } }, { name: { contains: string } }]
@@ -39,10 +44,11 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
 				const contains = { contains: search }
 				options.where = {
 					OR: [
-						{ actor_id: contains },
-						{ actor_name: contains },
-						{ target_id: contains },
-						{ target_name: contains },
+						{
+							actor: {
+								OR: [{ id: contains }, { name: contains }, { email: contains }],
+							},
+						},
 						{
 							action: {
 								OR: [{ id: contains }, { name: contains }],
