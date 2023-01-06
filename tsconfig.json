@@ -16,7 +16,10 @@
 		"incremental": true,
 		"baseUrl": ".",
 		"paths": {
-			"interfaces/*": ["interfaces/*"]
+			"interfaces/*": ["interfaces/*"],
+			"server/*": ["server/*"],
+			"middlewares/*": ["server/middlewares/*"],
+			"schema/*": ["server/schemas/*"]
 		}
 	},
 	"include": ["next-env.d.ts", "**/*.ts", "**/*.tsx"],

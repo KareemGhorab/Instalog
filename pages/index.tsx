@@ -1,3 +1,4 @@
+
 import Table from "components/home/table"
 import SearchBar from "components/home/searchBar"
 import useEvents from "hooks/useEvents"
