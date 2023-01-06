@@ -20,7 +20,8 @@
 			"server/*": ["server/*"],
 			"middlewares/*": ["server/middlewares/*"],
 			"schema/*": ["server/schemas/*"],
-			"public/*": ["public/*"]
+			"public/*": ["public/*"],
+			"clients/*": ["server/clients/*"]
 		}
 	},
 	"include": ["next-env.d.ts", "**/*.ts", "**/*.tsx"],

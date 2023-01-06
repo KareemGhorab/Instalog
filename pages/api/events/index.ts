@@ -1,4 +1,4 @@
-import { PrismaClient } from "@prisma/client"
+import prisma from "clients/prismaClient"
 import { NextApiRequest, NextApiResponse } from "next"
 import { createRouter } from "next-connect"
 
@@ -7,7 +7,6 @@ import { eventSchema } from "schema/event.schema"
 
 const PAGE_SIZE = 2
 
-const prisma = new PrismaClient()
 const router = createRouter<NextApiRequest, NextApiResponse>()
 
 router

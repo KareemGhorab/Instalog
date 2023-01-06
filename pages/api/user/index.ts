@@ -1,11 +1,10 @@
-import { PrismaClient } from "@prisma/client"
+import prisma from "clients/prismaClient"
 import { NextApiRequest, NextApiResponse } from "next"
 import { createRouter } from "next-connect"
 
 import { validate } from "middlewares/validate.middleware"
 import { userSchema } from "schema/user.schema"
 
-const prisma = new PrismaClient()
 const router = createRouter<NextApiRequest, NextApiResponse>()
 
 router
