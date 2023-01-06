@@ -7,31 +7,30 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-
 model Event {
-  id          Int      @id @default(autoincrement())
+  id          String    @id @default(uuid())
   actor_id    String
   actor_name  String
   group       String
   target_id   String
   target_name String
   location    String
-  occurred_at DateTime @default(now())
+  occurred_at DateTime  @default(now())
   action      Action?
   metadata    Metadata?
 }
 
 model Action {
-  id          Int      @id @default(autoincrement())
-  name        String
-  event       Event    @relation(fields: [event_id], references: [id])
-  event_id    Int      @unique
+  id       String @id @default(uuid())
+  name     String
+  event    Event  @relation(fields: [event_id], references: [id])
+  event_id String @unique
 }
 
 model Metadata {
-  request_id  Int      @id @default(autoincrement())
+  request_id  String @id @default(uuid())
   redirect    String
   description String
-  event       Event    @relation(fields: [event_id], references: [id])
-  event_id    Int      @unique
+  event       Event  @relation(fields: [event_id], references: [id])
+  event_id    String @unique
 }
