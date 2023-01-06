@@ -19,7 +19,8 @@
 			"interfaces/*": ["interfaces/*"],
 			"server/*": ["server/*"],
 			"middlewares/*": ["server/middlewares/*"],
-			"schema/*": ["server/schemas/*"]
+			"schema/*": ["server/schemas/*"],
+			"public/*": ["public/*"]
 		}
 	},
 	"include": ["next-env.d.ts", "**/*.ts", "**/*.tsx"],
