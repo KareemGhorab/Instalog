@@ -9,6 +9,7 @@ const PAGE_SIZE = 5
 interface QueryOptions {
 	skip: number
 	take: number
+	include?: any
 	where?: {
 		OR: [
 			{
@@ -37,6 +38,12 @@ router
 		const options: QueryOptions = {
 			skip: 0,
 			take: PAGE_SIZE,
+			include: {
+				action: true,
+				actor: true,
+				metadata: true,
+				target: true,
+			},
 		}
 
 		const { page, search } = req.query
