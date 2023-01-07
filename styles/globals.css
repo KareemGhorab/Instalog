@@ -4,12 +4,6 @@
 @tailwind components;
 @tailwind utilities;
 
-@layer base {
-	html {
-		font-family: Inter;
-	}
-}
-
 body {
 	@apply text-primary-800 font-inter;
 }
@@ -23,6 +17,43 @@ input {
 
 th {
 	@apply text-start font-semibold text-primary-600;
+}
+
+.flex--centered {
+	@apply flex justify-center items-center;
+}
+
+.card--main {
+	@apply border rounded-xl border-primary-100
+        w-full overflow-hidden
+		flex flex-col justify-between;
+}
+
+.card--main__footer {
+	@apply w-full bg-primary-200
+		text-center text-primary-600 font-semibold
+		py-3 mt-5;
+}
+
+.searchBar__btn {
+	@apply text-xs text-primary-700 
+	border-primary-400
+	flex--centered gap-1
+	px-3;
+}
+
+.table--main__body__tr--normal {
+	@apply w-full px-7
+	grid grid-cols-3 gap-1
+	items-center
+	relative;
+}
+
+.table--main__body__tr--expanded {
+	@apply border border-extra-300 rounded-xl
+	w-full overflow-hidden
+	shadow-sm p-10
+	grid grid-cols-3 gap-y-12;
 }
 
 div.loading {

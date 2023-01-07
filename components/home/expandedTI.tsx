@@ -1,6 +1,6 @@
 import useFetch from "hooks/useFetch"
 import React from "react"
-import { formateUTCDate } from "utils/dateFormater"
+import { formateUTCDate } from "utils/dateFormatter"
 
 export default function ExpandedTI(props: { eventId: string }) {
 	const { data, isLoading, error } = useFetch({
@@ -9,12 +9,7 @@ export default function ExpandedTI(props: { eventId: string }) {
 	})
 
 	return (
-		<tr
-			className="border border-extra-300 rounded-xl
-	w-full overflow-hidden
-	shadow-sm p-10
-	grid grid-cols-3 gap-y-12"
-		>
+		<tr className="table--main__body__tr--expanded">
 			{isLoading ? (
 				""
 			) : (
