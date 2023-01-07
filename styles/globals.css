@@ -30,16 +30,16 @@ th {
 }
 
 .card--main__footer {
-	@apply w-full bg-primary-200
+	@apply w-full bg-inherit
 		text-center text-primary-600 font-semibold
 		py-3 mt-5;
 }
 
 .searchBar__btn {
 	@apply text-xs text-primary-700 
-	border-primary-400
+	border-primary-400 bg-primary-200
 	flex--centered gap-1
-	px-3;
+	px-3 py-2 border-l-0;
 }
 
 .table--main__body__tr--normal {

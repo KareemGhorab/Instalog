@@ -1,39 +1,40 @@
-import { SubmitHandler, useForm } from "react-hook-form"
+import { useEffect, useState } from "react"
 
 export default function SearchBar(props: {
 	className?: string
-	onSubmit: SubmitHandler<any>
+	onSubmit: Function
 }) {
-	const { register, handleSubmit } = useForm()
+	const { className, onSubmit } = props
+
+	const [search, setSearch] = useState("")
+
+	function handleChange(e: React.FormEvent<HTMLInputElement>) {
+		setSearch(e.target.value)
+	}
+
+	useEffect(() => {
+		if (!search) return
+
+		const timer = setTimeout(() => {
+			console.log(search)
+
+			onSubmit(search)
+		}, 500)
+
+		return () => {
+			clearTimeout(timer)
+		}
+	}, [search, onSubmit])
 
 	return (
-		<form
-			onSubmit={handleSubmit(props.onSubmit)}
-			className="bg-primary-200 p-5 w-full flex"
-		>
+		<form className={`bg-inherit w-full flex ${className}`}>
 			<input
-				{...register("search")}
+				value={search}
+				onChange={handleChange}
 				className="w-full rounded-r-none text-primary-700"
 				placeholder="Search name, email or action..."
 				type="text"
 			/>
-			<button type="submit" className="searchBar__btn border border-l-0">
-				<svg
-					xmlns="http://www.w3.org/2000/svg"
-					fill="none"
-					viewBox="0 0 24 24"
-					strokeWidth={1.5}
-					stroke="currentColor"
-					className="w-4 h-4"
-				>
-					<path
-						strokeLinecap="round"
-						strokeLinejoin="round"
-						d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25H12"
-					/>
-				</svg>
-				FILTER
-			</button>
 		</form>
 	)
 }

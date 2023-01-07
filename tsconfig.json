@@ -22,7 +22,8 @@
 			"schema/*": ["server/schemas/*"],
 			"public/*": ["public/*"],
 			"clients/*": ["server/clients/*"],
-			"utils/*": ["utils/*"]
+			"utils/*": ["utils/*"],
+			"components/*": ["components/*"]
 		}
 	},
 	"include": ["next-env.d.ts", "**/*.ts", "**/*.tsx"],

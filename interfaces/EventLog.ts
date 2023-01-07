@@ -1,9 +1,9 @@
-interface Action {
+export interface Action {
 	id: string
 	name: string
 }
 
-interface Metadata {
+export interface Metadata {
 	request_id: string
 	redirect: string
 	description: string
@@ -21,8 +21,8 @@ export interface EventLog {
 	object: string
 	location: string
 	occurred_at: Date
-	actor: User
-	target: User
-	action: Action
-	metadata: Metadata
+	actor: User | string
+	target: User | string
+	action: Action | string
+	metadata: Metadata | string
 }
