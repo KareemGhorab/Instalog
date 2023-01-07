@@ -7,7 +7,7 @@ import SearchBar from "components/home/SearchBar"
 import Table from "components/home/table/table"
 import axios from "axios"
 import CSV from "components/home/buttons/CSV"
-import Live from "components/home/buttons/Live"
+import Live from "components/home/buttons/live"
 
 export default function Home() {
 	const eventsDispatch = useEventsDispatch()
@@ -15,13 +15,19 @@ export default function Home() {
 	const [params, setParams] = useState<{ page: number; search?: string }>({
 		page: 1,
 	})
-	const { data, isLoading } = useFetch({
+	const { data, isLoading, error } = useFetch({
 		baseURL: "/api",
 		url: "/events",
 		params,
 	})
 
-	const onSubmit = useCallback(
+
+	useEffect(() => {
+		if (isLoading)
+			eventsDispatch({ type: ACTIONS.SET_LOADING, payload: { events: [] } })
+	}, [isLoading, eventsDispatch])
+
+	const handleSubmit = useCallback(
 		(search: string) => {
 			eventsDispatch({
 				type: ACTIONS.REPLACE,
@@ -44,7 +50,7 @@ export default function Home() {
 		<main className="min:h-screen flex--centered p-10 lg:p-24">
 			<div className="card--main">
 				<header className="flex--centered bg-primary-200 p-5">
-					<SearchBar onSubmit={onSubmit} />
+					<SearchBar onSubmit={handleSubmit} />
 					<CSV />
 					<Live />
 				</header>

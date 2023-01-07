@@ -7,12 +7,12 @@ import TI from "./TI"
 
 export default function Table(props: {
 	className?: string
-	isLoading: boolean
 }) {
-	const { className, isLoading } = props
+	const { className } = props
 
 	const eventsState = useEvents()
-	const { events } = eventsState
+	const { events, isLoading } = eventsState
+
 	const [expandedIndex, setExpandedIndex] = useState(-1)
 
 	useEffect(() => {

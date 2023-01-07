@@ -1,7 +1,10 @@
 import { EventLog } from "interfaces/EventLog"
 import React, { Dispatch, useContext, useReducer } from "react"
 
-const EventsContext = React.createContext<State>({ events: [] })
+const EventsContext = React.createContext<State>({
+	events: [],
+	isLoading: false,
+})
 const EventsDispatchContext = React.createContext<Dispatch<Action>>(() => null)
 
 export const useEvents = () => useContext(EventsContext)
@@ -10,10 +13,12 @@ export const useEventsDispatch = () => useContext(EventsDispatchContext)
 export enum ACTIONS {
 	APPEND,
 	REPLACE,
+	SET_LOADING,
 }
 
 interface State {
 	events: EventLog[]
+	isLoading: boolean
 }
 
 interface Action {
@@ -26,16 +31,25 @@ interface Action {
 const reducer = (state: State, action: Action) => {
 	switch (action.type) {
 		case ACTIONS.REPLACE:
-			return { ...state, events: action.payload.events }
+			return { ...state, events: action.payload.events, isLoading: false }
 		case ACTIONS.APPEND:
-			return { ...state, events: [...state.events, ...action.payload.events] }
+			return {
+				...state,
+				events: [...state.events, ...action.payload.events],
+				isLoading: false,
+			}
+		case ACTIONS.SET_LOADING:
+			return { ...state, isLoading: true }
 		default:
 			return state
 	}
 }
 
 export default function EventsProvider(props: { children: JSX.Element }) {
-	const [state, dispatch] = useReducer(reducer, { events: [] })
+	const [state, dispatch] = useReducer(reducer, {
+		events: [],
+		isLoading: false,
+	})
 
 	return (
 		<>

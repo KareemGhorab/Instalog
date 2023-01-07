@@ -9,15 +9,12 @@ export default function SearchBar(props: {
 	const [search, setSearch] = useState("")
 
 	function handleChange(e: React.FormEvent<HTMLInputElement>) {
-		setSearch(e.target.value)
+		e.preventDefault()
+		setSearch(e.currentTarget.value)
 	}
 
 	useEffect(() => {
-		if (!search) return
-
 		const timer = setTimeout(() => {
-			console.log(search)
-
 			onSubmit(search)
 		}, 500)
 
@@ -27,7 +24,7 @@ export default function SearchBar(props: {
 	}, [search, onSubmit])
 
 	return (
-		<form className={`bg-inherit w-full flex ${className}`}>
+		<div className={`bg-inherit w-full flex ${className}`}>
 			<input
 				value={search}
 				onChange={handleChange}
@@ -35,6 +32,6 @@ export default function SearchBar(props: {
 				placeholder="Search name, email or action..."
 				type="text"
 			/>
-		</form>
+		</div>
 	)
 }

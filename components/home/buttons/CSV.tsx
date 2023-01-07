@@ -1,27 +1,26 @@
-import { useEvents } from "context/EventsContext"
-import { EventLog, Action } from "interfaces/EventLog"
+import useFetch from "hooks/useFetch"
 import { useEffect, useState } from "react"
 import { CSVLink } from "react-csv"
 
-const flattenEvents = (events: EventLog[]): EventLog[] => {
+const flattenEvents = (events: any[]): any[] => {
 	return events.map((event) => {
-		if (typeof event.action !== "string") event.action = event.action.name
-		if (typeof event.actor !== "string") event.actor = event.actor.name
+		event.action = event.action.name
+		event.actor_name = event.actor.name
+		event.actor_email = event.actor.email
+		event.actor_id = event.actor.id
 		return event
 	})
 }
 
 export default function CSV(props: { className?: string }) {
-	const { events } = useEvents()
-	const [flatEvents, setFlatEvents] = useState<EventLog[]>([])
+	const { data, isLoading } = useFetch({
+		url: "/events/all",
+		baseURL: "/api",
+	})
 
-	useEffect(() => {
-		setFlatEvents(flattenEvents([...events]))
-	}, [events])
-
-	if (!flatEvents.length) {
+	if (isLoading || !data?.documents) {
 		return (
-			<div className={`searchBar__btn border h-full ${props.className}`}>
+			<div className={`searchBar__btn border ${props.className}`}>
 				Loading..
 			</div>
 		)
@@ -31,7 +30,7 @@ export default function CSV(props: { className?: string }) {
 		<CSVLink
 			filename="Instalog_logs"
 			className={`searchBar__btn border ${props.className}`}
-			data={flatEvents}
+			data={data.documents}
 		>
 			<svg
 				xmlns="http://www.w3.org/2000/svg"
