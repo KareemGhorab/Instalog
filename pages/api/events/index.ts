@@ -5,9 +5,9 @@ import { createRouter } from "next-connect"
 import { validate } from "middlewares/validate.middleware"
 import { eventSchema } from "schema/event.schema"
 
-const PAGE_SIZE = 2
+const PAGE_SIZE = 4
 
-const router = createRouter<NextApiRequest, NextApiResponse>()
+const router = createRouter<NextApiRequest, any>()
 
 router
 	.get(async (req, res) => {
@@ -48,6 +48,7 @@ router
 					},
 				},
 			},
+			orderBy: { occurred_at: "desc" },
 			...options,
 		})
 
@@ -60,6 +61,25 @@ router
 		const document = await prisma.event.create({
 			data: req.body,
 		})
+
+		const miniDoc = await prisma.event.findFirst({
+			where: {
+				id: document.id,
+			},
+			select: {
+				actor: true,
+				id: true,
+				occurred_at: true,
+				action: {
+					select: {
+						name: true,
+					},
+				},
+			},
+		})
+
+		res?.socket?.server?.io.emit("new-event", miniDoc)
+
 		res.status(201).json({ message: "Event added Successfully", document })
 	})
 

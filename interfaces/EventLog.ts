@@ -21,8 +21,8 @@ export interface EventLog {
 	object: string
 	location: string
 	occurred_at: Date
-	actor: User | string
-	target: User | string
-	action: Action | string
-	metadata: Metadata | string
+	actor: User
+	target: User
+	action: Action
+	metadata: Metadata
 }

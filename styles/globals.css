@@ -12,7 +12,8 @@ input {
 	@apply bg-primary-200 text-primary-400
     px-3 py-1
     border border-primary-400
-    rounded-lg;
+    rounded-lg
+	focus:outline-primary-500;
 }
 
 th {
@@ -32,7 +33,9 @@ th {
 .card--main__footer {
 	@apply w-full bg-inherit
 		text-center text-primary-600 font-semibold
-		py-3 mt-5;
+		bg-primary-200
+		py-3 mt-5 rounded-b-xl border-0 outline-none
+		hover:bg-primary-400;
 }
 
 .searchBar__btn {
@@ -46,7 +49,8 @@ th {
 	@apply w-full px-7
 	grid grid-cols-3 gap-1
 	items-center
-	relative;
+	relative
+	;
 }
 
 .table--main__body__tr--expanded {

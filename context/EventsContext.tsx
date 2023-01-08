@@ -14,6 +14,7 @@ export enum ACTIONS {
 	APPEND,
 	REPLACE,
 	SET_LOADING,
+	PREPEND
 }
 
 interface State {
@@ -40,6 +41,10 @@ const reducer = (state: State, action: Action) => {
 			}
 		case ACTIONS.SET_LOADING:
 			return { ...state, isLoading: true }
+		case ACTIONS.PREPEND:
+			const tempEvents = [...state.events]
+			tempEvents.unshift(action.payload.events[0])
+			return {...state, events: tempEvents}
 		default:
 			return state
 	}

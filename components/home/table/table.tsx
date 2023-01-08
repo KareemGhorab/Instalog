@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react"
+import { useEffect, useRef, useState } from "react"
 
 import { useEvents } from "context/EventsContext"
 
@@ -10,6 +10,7 @@ export default function Table(props: {
 }) {
 	const { className } = props
 
+	
 	const eventsState = useEvents()
 	const { events, isLoading } = eventsState
 
@@ -35,7 +36,7 @@ export default function Table(props: {
 			</thead>
 			<tbody>
 				{isLoading
-					? Array.apply(null, new Array(2)).map((_, i) => (
+					? Array.apply(null, new Array(5)).map((_, i) => (
 							<tr
 								className="w-full px-7
 					grid grid-cols-3 gap-1

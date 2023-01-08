@@ -8,19 +8,18 @@ import Table from "components/home/table/table"
 import axios from "axios"
 import CSV from "components/home/buttons/CSV"
 import Live from "components/home/buttons/live"
+import { EventLog } from "interfaces/EventLog"
 
 export default function Home() {
 	const eventsDispatch = useEventsDispatch()
-
 	const [params, setParams] = useState<{ page: number; search?: string }>({
 		page: 1,
 	})
-	const { data, isLoading, error } = useFetch({
+	const { data, isLoading, mutate } = useFetch({
 		baseURL: "/api",
 		url: "/events",
 		params,
 	})
-
 
 	useEffect(() => {
 		if (isLoading)
@@ -38,24 +37,35 @@ export default function Home() {
 		[eventsDispatch]
 	)
 
+	const handleLiveEvent = useCallback(
+		(event: EventLog) => {
+			eventsDispatch({ type: ACTIONS.PREPEND, payload: { events: [event] } })
+		},
+		[eventsDispatch]
+	)
+
+	const reFetch = () => {
+		setParams((prev) => ({ ...prev, page: 1 }))
+	}
+
 	useEffect(() => {
 		if (!data) return
 		eventsDispatch({
 			type: ACTIONS.APPEND,
 			payload: { events: data.documents },
 		})
-	}, [data, eventsDispatch])
+	}, [isLoading, eventsDispatch])
 
 	return (
-		<main className="min:h-screen flex--centered p-10 lg:p-24">
+		<main className="min:h-screen flex--centered py-10 px-2 lg:p-24">
 			<div className="card--main">
 				<header className="flex--centered bg-primary-200 p-5">
 					<SearchBar onSubmit={handleSubmit} />
 					<CSV />
-					<Live />
+					<Live onEvent={handleLiveEvent} onClose={reFetch} />
 				</header>
 				<section>
-					<Table isLoading={isLoading} />
+					<Table />
 				</section>
 				<button
 					onClick={() =>
