@@ -1,8 +1,8 @@
 import FilterIcon from "components/icons/filterIcon"
 import { ACTIONS, useEventsDispatch } from "context/EventsContext"
 import useFetch from "hooks/useFetch"
-import { User } from "interfaces/EventLog"
 import { useState } from "react"
+import FilterField from "./filterField"
 
 export default function Filter(props: { className?: string }) {
 	const { className } = props
@@ -14,11 +14,11 @@ export default function Filter(props: { className?: string }) {
 	const [isDropdown, setIsDropdown] = useState(false)
 	const eventsDispatch = useEventsDispatch()
 
-	const onClick = (actor_id: string) => {
-		eventsDispatch({ type: ACTIONS.FILTER_ACTOR_ID, payload: { actor_id } })
+	const filter = (id: string, fieldName: string, actionType: ACTIONS) => {
+		eventsDispatch({ type: actionType, payload: { [fieldName]: id } })
 	}
-	const onReset = () => {
-		eventsDispatch({ type: ACTIONS.RESET_ACTOR_ID_FILTER })
+	const reset = (actionType: ACTIONS) => {
+		eventsDispatch({ type: actionType })
 	}
 
 	return (
@@ -35,23 +35,22 @@ export default function Filter(props: { className?: string }) {
 					className="absolute bg-primary-100 p-3 w-fit
 				rounded-lg z-10"
 				>
-					<li
-						className="text-primary-500 cursor-pointer mt-3
-							hover:text-primary-700"
-						onClick={onReset}
-					>
-						all
-					</li>
-					{data.documents.map((user: User) => (
-						<li
-							className="text-primary-500 cursor-pointer mt-3
-							hover:text-primary-700"
-							key={user.id}
-							onClick={() => onClick(user.id)}
-						>
-							{user.email}
-						</li>
-					))}
+					<FilterField
+						title="Actor"
+						onFilter={(id: string) =>
+							filter(id, "actor_id", ACTIONS.FILTER_ACTOR_ID)
+						}
+						onReset={() => reset(ACTIONS.RESET_ACTOR_ID_FILTER)}
+						documents={data.documents}
+					/>
+					<FilterField
+						title="Target"
+						onFilter={(id: string) =>
+							filter(id, "target_id", ACTIONS.FILTER_TARGET_ID)
+						}
+						onReset={() => reset(ACTIONS.RESET_TARGET_ID_FILTER)}
+						documents={data.documents}
+					/>
 				</ul>
 			)}
 		</div>

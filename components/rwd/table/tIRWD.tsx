@@ -11,8 +11,11 @@ export default function TIRWD(props: {
 	return (
 		<tr className="relative mb-5" key={event.id}>
 			{event && (
-				<>
-					<td>
+				<td
+					className="flex--centered flex-col border border-t-0 py-5
+                rounded-lg"
+				>
+					<div>
 						<figure className="flex items-center gap-4 my-3">
 							<Image
 								src={`/${event.actor.image}`}
@@ -24,10 +27,12 @@ export default function TIRWD(props: {
 								<p>{event.actor.email}</p>
 							</figcaption>
 						</figure>
-					</td>
-					<td>{event.action.name}</td>
-					<td>{formateUTCDate(event.occurred_at.toString())}</td>
-					<td
+					</div>
+					<div>{event.action.name}</div>
+					<div className="mt-3">
+						{formateUTCDate(event.occurred_at.toString())}
+					</div>
+					<div
 						onClick={() => setExpandedIndex()}
 						className="absolute right-7 rounded-full
 						cursor-pointer text-primary-50
@@ -45,8 +50,8 @@ export default function TIRWD(props: {
 								clipRule="evenodd"
 							/>
 						</svg>
-					</td>
-				</>
+					</div>
+				</td>
 			)}
 		</tr>
 	)

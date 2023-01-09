@@ -12,7 +12,7 @@ import { compare } from "utils/objectCompare"
 const EventsContext = React.createContext<State>({
 	events: [],
 	isLoading: false,
-	params: { page: 1 },
+	params: { last_id: "" },
 })
 const EventsDispatchContext = React.createContext<Dispatch<Action>>(() => null)
 
@@ -26,6 +26,10 @@ export enum ACTIONS {
 	SEARCH,
 	FILTER_ACTOR_ID,
 	RESET_ACTOR_ID_FILTER,
+	FILTER_TARGET_ID,
+	RESET_TARGET_ID_FILTER,
+	FILTER_ACTION_ID,
+	RESET_ACTION_ID_FILTER,
 	REPLACE,
 	APPEND,
 	SET_LOADING,
@@ -36,9 +40,11 @@ interface State {
 	isLoading: boolean
 	error?: Error
 	params: {
-		page: number
+		last_id?: string
 		search?: string
 		actor_id?: string
+		target_id?: string
+		action_id?: string
 	}
 }
 
@@ -49,96 +55,149 @@ interface Action {
 		events?: EventLog[]
 		search?: string
 		actor_id?: string
+		target_id?: string
+		action_id?: string
 		isLoading?: boolean
 	}
 }
 
+const reducer = (state: State, action: Action): State => {
+	const { params: prevParams, events: prevEvents } = state
+
+	let newState = state
+
+	switch (action.type) {
+		// No params change
+		case ACTIONS.PREPEND:
+			if (!action?.payload?.event) break
+			return {
+				...state,
+				events: [action.payload.event, ...prevEvents.slice(0, -1)],
+			}
+		case ACTIONS.APPEND:
+			if (!action?.payload?.events) break
+			return { ...state, events: [...state.events, ...action.payload.events] }
+		case ACTIONS.REPLACE:
+			if (!action?.payload?.events) break
+			return { ...state, events: action.payload.events }
+		case ACTIONS.SET_LOADING:
+			if (action?.payload?.isLoading === undefined) break
+			return { ...state, isLoading: action.payload.isLoading }
+
+		// Params change
+		case ACTIONS.LOAD_MORE:
+			newState = {
+				...state,
+				params: {
+					...prevParams,
+					last_id: state.events[state.events.length - 1].id,
+				},
+			}
+			break
+		case ACTIONS.SEARCH:
+			let searchTerm = ""
+			if (action?.payload?.search) searchTerm = action.payload.search
+			newState = {
+				...state,
+				events: [],
+				params: { ...prevParams, last_id: "", search: searchTerm },
+			}
+			break
+		case ACTIONS.RESET:
+			newState = { ...state, events: [], params: { last_id: "" } }
+			break
+
+		//Filters
+		//TODO refractor
+		case ACTIONS.FILTER_ACTOR_ID:
+			if (!action?.payload?.actor_id) break
+			newState = {
+				...state,
+				events: [],
+				params: {
+					...prevParams,
+					last_id: "",
+					actor_id: action.payload.actor_id,
+				},
+			}
+			break
+		case ACTIONS.RESET_ACTOR_ID_FILTER:
+			if (!prevParams.actor_id) break
+			const resetActorFilterParams = { ...prevParams }
+			delete resetActorFilterParams.actor_id
+			newState = { ...state, events: [], params: resetActorFilterParams }
+			break
+		case ACTIONS.FILTER_TARGET_ID:
+			if (!action?.payload?.target_id) break
+			newState = {
+				...state,
+				events: [],
+				params: {
+					...prevParams,
+					last_id: "",
+					target_id: action.payload.target_id,
+				},
+			}
+			break
+		case ACTIONS.RESET_TARGET_ID_FILTER:
+			if (!prevParams.target_id) break
+			const resetTargetFilterParams = { ...prevParams }
+			delete resetTargetFilterParams.target_id
+			newState = { ...state, events: [], params: resetTargetFilterParams }
+			break
+		case ACTIONS.FILTER_ACTION_ID:
+			if (!action?.payload?.action_id) break
+			newState = {
+				...state,
+				events: [],
+				params: {
+					...prevParams,
+					last_id: "",
+					action_id: action.payload.action_id,
+				},
+			}
+			break
+		case ACTIONS.RESET_ACTION_ID_FILTER:
+			if (!prevParams.action_id) break
+			const resetFilterParams = { ...prevParams }
+			delete resetFilterParams.action_id
+			newState = { ...state, events: [], params: resetFilterParams }
+			break
+
+		default:
+			return state
+	}
+
+	if (compare(newState.params, state.params)) return state
+	return newState
+}
+
 export default function EventsProvider(props: { children: JSX.Element }) {
-	const reducer = useCallback((state: State, action: Action): State => {
-		const { params: prevParams, events: prevEvents } = state
-
-		let newState = state
-
-		switch (action.type) {
-			// No params change
-			case ACTIONS.PREPEND:
-				if (!action?.payload?.event) break
-				return {
-					...state,
-					events: [action.payload.event, ...prevEvents.slice(0, -1)],
-				}
-			case ACTIONS.REPLACE:
-				if (!action?.payload?.events) break
-				return { ...state, events: action.payload.events }
-			case ACTIONS.APPEND:
-				if (!action?.payload?.events) break
-				return { ...state, events: [...state.events, ...action.payload.events] }
-			case ACTIONS.SET_LOADING:
-				if (!action?.payload?.isLoading) break
-				return { ...state, isLoading: action.payload.isLoading }
-
-			// Params change
-			case ACTIONS.LOAD_MORE:
-				newState = {
-					...state,
-					params: { ...prevParams, page: prevParams.page + 1 },
-				}
-				break
-			case ACTIONS.SEARCH:
-				let searchTerm = ""
-				if (action?.payload?.search) searchTerm = action.payload.search
-				newState = {
-					...state,
-					events: [],
-					params: { ...prevParams, page: 1, search: searchTerm },
-				}
-				break
-			case ACTIONS.FILTER_ACTOR_ID:
-				if (!action?.payload?.actor_id) break
-				newState = {
-					...state,
-					events: [],
-					params: { ...prevParams, page: 1, actor_id: action.payload.actor_id },
-				}
-				break
-			case ACTIONS.RESET_ACTOR_ID_FILTER:
-				if (!prevParams.actor_id) break
-				const resetFilterParams = { ...prevParams }
-				delete resetFilterParams.actor_id
-				newState = { ...state, events: [], params: resetFilterParams }
-				break
-			case ACTIONS.RESET:
-				newState = { ...state, params: { ...prevParams, page: 1 } }
-				break
-
-			default:
-				return state
-		}
-
-		if (compare(newState.params, state.params)) return state
-		return newState
-	}, [])
-
 	const [state, dispatch] = useReducer(reducer, {
 		events: [],
 		isLoading: false,
-		params: { page: 1 },
+		params: { last_id: "" },
 	})
 
-	const { data, isLoading } = useFetch({
+	const { data, isLoading: isFetching } = useFetch({
 		baseURL: "/api",
 		url: "/events",
 		params: state.params,
 	})
 
 	useEffect(() => {
-		if (!data) return
-		dispatch({ type: ACTIONS.APPEND, payload: { events: data.documents } })
-	}, [data])
+		dispatch({ type: ACTIONS.SET_LOADING, payload: { isLoading: isFetching } })
+	}, [isFetching])
+
+	console.log(state)
 
 	useEffect(() => {
-		dispatch({ type: ACTIONS.SET_LOADING, payload: { isLoading } })
-	}, [isLoading])
+		if (!data?.documents) return
+
+		console.log("Append")
+
+		dispatch({ type: ACTIONS.APPEND, payload: { events: data.documents } })
+	}, [data?.documents])
 
 	return (
 		<>

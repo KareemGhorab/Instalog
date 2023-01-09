@@ -1,5 +1,5 @@
 import prisma from "clients/prismaClient"
-import { NextApiRequest, NextApiResponse } from "next"
+import { NextApiRequest } from "next"
 import { createRouter } from "next-connect"
 
 import { validate } from "middlewares/validate.middleware"
@@ -11,14 +11,14 @@ const router = createRouter<NextApiRequest, any>()
 
 router
 	.get(async (req, res) => {
-		const options: any = {
-			skip: 0,
+		let options: any = {
 			take: PAGE_SIZE,
 		}
 
-		const { page, search, actor_id } = req.query
+		const { search, actor_id, target_id, action_id, last_id } = req.query
 
-		if (page && +page > 0) options.skip = (+page - 1) * PAGE_SIZE
+		if (last_id && typeof last_id === "string")
+			options = { ...options, take: PAGE_SIZE + 1, cursor: { id: last_id } }
 		if (search && typeof search === "string") {
 			const contains = { contains: search }
 			options.where = {
@@ -37,10 +37,9 @@ router
 				],
 			}
 		}
-
-		if (actor_id) {
-			options.where = { ...options.where, actor_id }
-		}
+		if (actor_id) options.where = { ...options.where, actor_id }
+		if (target_id) options.where = { ...options.where, target_id }
+		if (action_id) options.where = { ...options.where, action_id }
 
 		const documents = await prisma.event.findMany({
 			select: {
@@ -56,6 +55,8 @@ router
 			orderBy: { occurred_at: "desc" },
 			...options,
 		})
+
+		if (last_id) documents.shift()
 
 		res
 			.status(200)

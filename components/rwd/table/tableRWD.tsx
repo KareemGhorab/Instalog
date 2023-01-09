@@ -1,7 +1,7 @@
-import { useEffect, useRef, useState } from "react"
+import { useEffect } from "react"
 
-import ExpandedTIRWD from "./expandedTIRWD"
 import TIRWD from "./tIRWD"
+import ExpandedTIRWD from "./expandedTIRWD"
 import { EventLog } from "interfaces/EventLog"
 
 export default function TableRWD(props: {
