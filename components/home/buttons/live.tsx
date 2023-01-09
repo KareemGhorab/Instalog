@@ -1,17 +1,15 @@
 import axios from "axios"
+import { ACTIONS, useEventsDispatch } from "context/EventsContext"
 import { EventLog } from "interfaces/EventLog"
 import React, { useEffect, useState } from "react"
 import { io } from "socket.io-client"
 
 let socket: any = null
 
-export default function Live(props: {
-	className?: string
-	onEvent: any
-	onClose: Function
-}) {
-	const { className, onEvent, onClose } = props
+export default function Live(props: { className?: string }) {
+	const { className } = props
 	const [isLive, setIsLive] = useState(false)
+	const eventsDispatch = useEventsDispatch()
 
 	useEffect(() => {
 		axios.get("/api/socket")
@@ -19,19 +17,18 @@ export default function Live(props: {
 
 		if (!isLive) {
 			socket.on("new-event", () => {})
-			onClose()
 			return
 		}
 
 		socket.on("new-event", (event: EventLog) => {
 			console.log(event)
-			onEvent(event)
+			eventsDispatch({ type: ACTIONS.PREPEND, payload: { event } })
 		})
-	}, [isLive, onEvent])
+	}, [isLive, eventsDispatch])
 
 	return (
 		<button
-			className={`searchBar__btn border ${className}`}
+			className={`searchBar__btn border rounded-r-lg ${className}`}
 			onClick={() => setIsLive((prev) => !prev)}
 		>
 			<div

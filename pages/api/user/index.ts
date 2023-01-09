@@ -9,7 +9,7 @@ const router = createRouter<NextApiRequest, NextApiResponse>()
 
 router
 	.get(async (req, res) => {
-		const documents = await prisma.user.findMany()
+		const documents = await prisma.user.findMany({ orderBy: { name: "asc" } })
 		res.status(200).json({ message: "Users retrieved Successfully", documents })
 	})
 	.use(validate(userSchema))

@@ -5,14 +5,11 @@ import { useEvents } from "context/EventsContext"
 import ExpandedTI from "./expandedTI"
 import TI from "./TI"
 
-export default function Table(props: {
-	className?: string
-}) {
+export default function Table(props: { className?: string }) {
 	const { className } = props
 
-	
 	const eventsState = useEvents()
-	const { events, isLoading } = eventsState
+	const { events } = eventsState
 
 	const [expandedIndex, setExpandedIndex] = useState(-1)
 
@@ -35,7 +32,7 @@ export default function Table(props: {
 				</tr>
 			</thead>
 			<tbody>
-				{isLoading
+				{!events
 					? Array.apply(null, new Array(5)).map((_, i) => (
 							<tr
 								className="w-full px-7

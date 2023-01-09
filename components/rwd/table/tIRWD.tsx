@@ -2,14 +2,14 @@ import { EventLog } from "interfaces/EventLog"
 import Image from "next/image"
 import { formateUTCDate } from "utils/dateFormatter"
 
-export default function TI(props: {
+export default function TIRWD(props: {
 	event: EventLog
 	setExpandedIndex: Function
 }) {
 	const { event, setExpandedIndex } = props
 
 	return (
-		<tr className="table--main__body__tr--normal" key={event.id}>
+		<tr className="relative mb-5" key={event.id}>
 			{event && (
 				<>
 					<td>

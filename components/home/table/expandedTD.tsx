@@ -5,6 +5,15 @@ type dataType = {
 	element: ReactNode
 }
 
+function InnerTD(props: { element: any }) {
+	return (
+		<>
+			<span>{props.element.label}</span>
+			<div className="text-black col-span-3">{props.element.element}</div>
+		</>
+	)
+}
+
 export default function ExpandedTD(props: {
 	data: dataType[]
 	header: ReactNode
@@ -18,11 +27,8 @@ export default function ExpandedTD(props: {
 		>
 			<span className="col-span-4">{header}</span>
 
-			{data.map((element) => (
-				<>
-					<span>{element.label}</span>
-					<div className="text-black col-span-3">{element.element}</div>
-				</>
+			{data.map((element, i) => (
+				<InnerTD key={i} element={element} />
 			))}
 		</td>
 	)

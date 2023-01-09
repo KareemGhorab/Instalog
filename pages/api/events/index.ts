@@ -5,7 +5,7 @@ import { createRouter } from "next-connect"
 import { validate } from "middlewares/validate.middleware"
 import { eventSchema } from "schema/event.schema"
 
-const PAGE_SIZE = 4
+const PAGE_SIZE = 5
 
 const router = createRouter<NextApiRequest, any>()
 
@@ -16,12 +16,13 @@ router
 			take: PAGE_SIZE,
 		}
 
-		const { page, search } = req.query
+		const { page, search, actor_id } = req.query
 
 		if (page && +page > 0) options.skip = (+page - 1) * PAGE_SIZE
 		if (search && typeof search === "string") {
 			const contains = { contains: search }
 			options.where = {
+				...options.where,
 				OR: [
 					{
 						actor: {
@@ -35,6 +36,10 @@ router
 					},
 				],
 			}
+		}
+
+		if (actor_id) {
+			options.where = { ...options.where, actor_id }
 		}
 
 		const documents = await prisma.event.findMany({

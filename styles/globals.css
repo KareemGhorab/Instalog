@@ -26,7 +26,7 @@ th {
 
 .card--main {
 	@apply border rounded-xl border-primary-100
-        w-full overflow-hidden
+        w-full
 		flex flex-col justify-between;
 }
 
@@ -49,16 +49,19 @@ th {
 	@apply w-full px-7
 	grid grid-cols-3 gap-1
 	items-center
-	relative
-	;
+	relative;
 }
 
 .table--main__body__tr--expanded {
 	@apply border border-extra-300 rounded-xl
-	w-full overflow-hidden
+	overflow-hidden bg-white
 	shadow-sm p-10
-	grid grid-cols-3 gap-y-12;
+	grid grid-cols-3 gap-y-12
+	mx-auto;
+	width: calc(100% + 50px);
+	transform: translateX(-25px)
 }
+
 
 div.loading {
 	@apply h-4

@@ -1,37 +1,29 @@
-import { useEffect, useState } from "react"
+import { ACTIONS, useEventsDispatch } from "context/EventsContext"
+import { useState } from "react"
 
-export default function SearchBar(props: {
-	className?: string
-	onSubmit: Function
-}) {
-	const { className, onSubmit } = props
+export default function SearchBar(props: { className?: string }) {
+	const { className } = props
 
+	const eventsDispatch = useEventsDispatch()
 	const [search, setSearch] = useState("")
 
-	function handleChange(e: React.FormEvent<HTMLInputElement>) {
+	function handleSubmit(e: React.FormEvent<HTMLInputElement>) {
 		e.preventDefault()
-		setSearch(e.currentTarget.value)
+		eventsDispatch({ type: ACTIONS.SEARCH, payload: { search } })
 	}
 
-	useEffect(() => {
-		const timer = setTimeout(() => {
-			onSubmit(search)
-		}, 500)
-
-		return () => {
-			clearTimeout(timer)
-		}
-	}, [search, onSubmit])
-
 	return (
-		<div className={`bg-inherit w-full flex ${className}`}>
+		<form
+			onSubmit={handleSubmit}
+			className={`bg-inherit w-full flex ${className}`}
+		>
 			<input
 				value={search}
-				onChange={handleChange}
+				onChange={(e) => setSearch(e.currentTarget.value)}
 				className="w-full rounded-r-none text-primary-700"
 				placeholder="Search name, email or action..."
 				type="text"
 			/>
-		</div>
+		</form>
 	)
 }
