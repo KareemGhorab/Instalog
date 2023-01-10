@@ -108,18 +108,8 @@ const reducer = (state: State, action: Action): State => {
 			break
 
 		//Filters
-		//TODO refractor
 		case ACTIONS.FILTER_ACTOR_ID:
-			if (!action?.payload?.actor_id) break
-			newState = {
-				...state,
-				events: [],
-				params: {
-					...prevParams,
-					last_id: "",
-					actor_id: action.payload.actor_id,
-				},
-			}
+			newState = filterByName(prevParams, state, "actor_id", action)
 			break
 		case ACTIONS.RESET_ACTOR_ID_FILTER:
 			if (!prevParams.actor_id) break
@@ -128,40 +118,13 @@ const reducer = (state: State, action: Action): State => {
 			newState = { ...state, events: [], params: resetActorFilterParams }
 			break
 		case ACTIONS.FILTER_TARGET_ID:
-			if (!action?.payload?.target_id) break
-			newState = {
-				...state,
-				events: [],
-				params: {
-					...prevParams,
-					last_id: "",
-					target_id: action.payload.target_id,
-				},
-			}
+			newState = filterByName(prevParams, state, "target_id", action)
 			break
 		case ACTIONS.RESET_TARGET_ID_FILTER:
 			if (!prevParams.target_id) break
 			const resetTargetFilterParams = { ...prevParams }
 			delete resetTargetFilterParams.target_id
 			newState = { ...state, events: [], params: resetTargetFilterParams }
-			break
-		case ACTIONS.FILTER_ACTION_ID:
-			if (!action?.payload?.action_id) break
-			newState = {
-				...state,
-				events: [],
-				params: {
-					...prevParams,
-					last_id: "",
-					action_id: action.payload.action_id,
-				},
-			}
-			break
-		case ACTIONS.RESET_ACTION_ID_FILTER:
-			if (!prevParams.action_id) break
-			const resetFilterParams = { ...prevParams }
-			delete resetFilterParams.action_id
-			newState = { ...state, events: [], params: resetFilterParams }
 			break
 
 		default:
@@ -170,6 +133,24 @@ const reducer = (state: State, action: Action): State => {
 
 	if (compare(newState.params, state.params)) return state
 	return newState
+}
+
+const filterByName = (
+	params: any,
+	state: State,
+	filterName: string,
+	action: any
+): State => {
+	if (!action?.payload[filterName]) return state
+	return {
+		...state,
+		events: [],
+		params: {
+			...params,
+			last_id: "",
+			[filterName]: action?.payload[filterName],
+		},
+	}
 }
 
 export default function EventsProvider(props: { children: JSX.Element }) {
@@ -189,12 +170,8 @@ export default function EventsProvider(props: { children: JSX.Element }) {
 		dispatch({ type: ACTIONS.SET_LOADING, payload: { isLoading: isFetching } })
 	}, [isFetching])
 
-	console.log(state)
-
 	useEffect(() => {
 		if (!data?.documents) return
-
-		console.log("Append")
 
 		dispatch({ type: ACTIONS.APPEND, payload: { events: data.documents } })
 	}, [data?.documents])

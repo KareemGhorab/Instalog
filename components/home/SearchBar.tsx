@@ -19,7 +19,7 @@ export default function SearchBar(props: { className?: string }) {
 		>
 			<input
 				value={search}
-				onChange={(e) => setSearch(e.currentTarget.value)}
+				onChange={(e:any) => setSearch(e.currentTarget.value)}
 				className="w-full rounded-r-none text-primary-700"
 				placeholder="Search name, email or action..."
 				type="text"
