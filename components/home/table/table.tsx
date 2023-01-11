@@ -25,6 +25,7 @@ export default function Table(props: { className?: string }) {
 				events={events}
 				expandedIndex={expandedIndex}
 				setExpandedIndex={setExpandedIndex}
+				isLoading={isLoading}
 			/>
 
 			<table className={`w-full ${className}`}>

@@ -9,8 +9,9 @@ export default function TableRWD(props: {
 	expandedIndex: number
 	setExpandedIndex: Function
 	events: EventLog[]
+	isLoading: boolean
 }) {
-	const { className, events, expandedIndex, setExpandedIndex } = props
+	const { className, events, expandedIndex, setExpandedIndex, isLoading } = props
 
 	useEffect(() => {
 		setExpandedIndex(-1)
@@ -19,7 +20,7 @@ export default function TableRWD(props: {
 	return (
 		<table className={`w-full ${className}`}>
 			<tbody>
-				{!events
+				{isLoading
 					? Array.apply(null, new Array(5)).map((_, i) => (
 							<tr
 								className="w-full
@@ -27,8 +28,9 @@ export default function TableRWD(props: {
 					items-center"
 								key={i}
 							>
-								<td>
-									<div className="loading w-4/5"></div>
+								<td className="flex items-center
+								gap-5 flex-col">
+									<div className="loading w-3/5 mt-5"></div>
 								</td>
 							</tr>
 					  ))
